@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Chiron</title>
+    <link rel="Stylesheet" href="Chiron.css"> <!-- Ensure your CSS file is correctly linked -->
+</head>
+<body>
+    <div class="login">
+        <a href="login.html">Client Login</a>
+    </div>
+    <div class="container">
+        <h1>Chiron</h1>
+    </div>
+    <!-- Chatbot Container -->
+<div id="chatbot" class="chatbot">
+    <div class="chat-header">
+        <span>Chat with Chiron</span>
+        <button id="close-chat" onclick="toggleChat()">X</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+<button id="chat-open" onclick="toggleChat()" class="chat-open-btn">Chat</button>
+<script>
+    // Toggle chatbot visibility
+    function toggleChat() {
+        const chatbot = document.getElementById('chatbot');
+        const chatOpenBtn = document.getElementById('chat-open');
+        if (chatbot.style.display === 'none') {
+            chatbot.style.display = 'flex';
+            chatOpenBtn.style.display = 'none';
+        } else {
+            chatbot.style.display = 'none';
+            chatOpenBtn.style.display = 'block';
+        }
+    }
+    
+    // Send message to the assistant API and display response
+    function sendMessage() {
+        const inputField = document.getElementById('chat-input');
+        const message = inputField.value.trim();
+        const chatMessages = document.getElementById('chat-messages');
+    
+        if (message) {
+            // Display user message
+            const userMessage = document.createElement('div');
+            userMessage.textContent = `You: ${message}`;
+            chatMessages.appendChild(userMessage);
+    
+            // Placeholder for sending message to your API and getting a response
+            // Replace this part with actual API request code
+            const assistantMessage = document.createElement('div');
+            assistantMessage.textContent = `Chiron: Processing your request...`;
+            chatMessages.appendChild(assistantMessage);
+    
+            // Example: Fetch API integration (adjust according to your API)
+            /*
+            fetch('YOUR_API_ENDPOINT', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                assistantMessage.textContent = `Chiron: ${data.response}`;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                assistantMessage.textContent = `Chiron: I'm currently unable to respond. Please try again later.`;
+            });
+            */
+    
+            inputField.value = ''; // Clear input field
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+        }
+    }
+    </script>
+    
+</body>
+</html>
