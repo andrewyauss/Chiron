@@ -14,73 +14,86 @@
         <h1>Chiron</h1>
     </div>
     <!-- Chatbot Container -->
-<div id="chatbot" class="chatbot">
-    <div class="chat-header">
-        <span>Chat with Chiron</span>
-        <button id="close-chat" onclick="toggleChat()">X</button>
+    <div id="chatbot" class="chatbot" style="display: none;">
+        <div class="chat-header">
+            <span>Chat with Chiron</span>
+            <button id="close-chat" onclick="toggleChat()">X</button>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="mybutton" onclick="sendMessage()">Send</button>
+        </div>
     </div>
-    <div class="chat-messages" id="chat-messages"></div>
-    <div class="chat-input">
-        <input type="text" id="chat-input" placeholder="Type a message...">
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
-<button id="chat-open" onclick="toggleChat()" class="chat-open-btn">Chat</button>
-<script>
-    // Toggle chatbot visibility
-    function toggleChat() {
-        const chatbot = document.getElementById('chatbot');
-        const chatOpenBtn = document.getElementById('chat-open');
-        if (chatbot.style.display === 'none') {
-            chatbot.style.display = 'flex';
-            chatOpenBtn.style.display = 'none';
-        } else {
-            chatbot.style.display = 'none';
-            chatOpenBtn.style.display = 'block';
+    <button id="chat-open" onclick="toggleChat()" class="chat-open-btn">Chat</button>
+    <script>
+        // Toggle chatbot visibility
+        function toggleChat() {
+            const chatbot = document.getElementById('chatbot');
+            const chatbotButton = document.getElementById('chat-open')
+            if (chatbot.style.display === 'none') {
+                chatbot.style.display = 'flex';
+                chatbotButton.style.display = 'none'
+            } else {
+                chatbot.style.display = 'none';
+                chatbotButton.style.display = 'flex'
+            }
         }
-    }
-    
-    // Send message to the assistant API and display response
-    function sendMessage() {
-        const inputField = document.getElementById('chat-input');
-        const message = inputField.value.trim();
-        const chatMessages = document.getElementById('chat-messages');
-    
-        if (message) {
-            // Display user message
-            const userMessage = document.createElement('div');
-            userMessage.textContent = `You: ${message}`;
-            chatMessages.appendChild(userMessage);
-    
-            // Placeholder for sending message to your API and getting a response
-            // Replace this part with actual API request code
-            const assistantMessage = document.createElement('div');
-            assistantMessage.textContent = `Chiron: Processing your request...`;
-            chatMessages.appendChild(assistantMessage);
-    
-            // Example: Fetch API integration (adjust according to your API)
-            /*
-            fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: message }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                assistantMessage.textContent = `Chiron: ${data.response}`;
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                assistantMessage.textContent = `Chiron: I'm currently unable to respond. Please try again later.`;
-            });
-            */
-    
-            inputField.value = ''; // Clear input field
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+        
+        // Send message to the assistant API and display response
+        function sendMessage() {
+            const inputField = document.getElementById('chat-input');
+            const message = inputField.value.trim();
+            const chatMessages = document.getElementById('chat-messages');
+        
+            if (message) {
+                // Display user message
+                const userMessage = document.createElement('div');
+                userMessage.textContent = `You: ${message}`;
+                chatMessages.appendChild(userMessage);
+        
+                // Placeholder for sending message to your API and getting a response
+                // Replace this part with actual API request code
+                const assistantMessage = document.createElement('div');
+                assistantMessage.textContent = `Chiron: Processing your request...`;
+                chatMessages.appendChild(assistantMessage);
+        
+                // Example: Fetch API integration (adjust according to your API)
+                fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': '',
+                    },
+                    body: JSON.stringify({
+                        "model": "gpt-3.5-turbo",
+                        "messages": [{"role": "user", "content": message}],
+                        "temperature": 0.7
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    assistantMessage.textContent = `Chiron: ${data.choices[0].message.content}`;
+                    console.log(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    assistantMessage.textContent = `Chiron: I'm currently unable to respond. Please try again later.`;
+                });
+                
+        
+                inputField.value = ''; // Clear input field
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+            }
         }
-    }
+
+        // Add event listener for Enter key press in the input field
+        document.getElementById('chat-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent the default action of the Enter key (submitting the form)
+                document.getElementById('mybutton').click(); // Trigger the click event on the submit button
+            }
+        });
     </script>
     
 </body>
